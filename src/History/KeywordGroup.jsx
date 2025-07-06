@@ -6,7 +6,6 @@ import ChangeGroupName from "./ChangeGroupName";
 import HistoryItem from "./HistoryItem";
 
 export default function KeywordGroup({
-  addedGroupName,
   setAddedGroupName,
   groupName,
   historyGroup,
@@ -16,6 +15,7 @@ export default function KeywordGroup({
 }) {
   const { userId } = useUserId();
   const targetGroupId = historyGroup.id;
+
   return (
     <div className="newGroup h-full relative">
       <div>
@@ -26,7 +26,6 @@ export default function KeywordGroup({
         >
           <ChangeGroupName
             initialGroupName={groupName}
-            addedGroupName={addedGroupName}
             setAddedGroupName={setAddedGroupName}
           />
           <div className="gap-[10px]">
@@ -68,7 +67,6 @@ export default function KeywordGroup({
 }
 
 KeywordGroup.propTypes = {
-  addedGroupName: PropTypes.array.isRequired,
   setAddedGroupName: PropTypes.func.isRequired,
   groupName: PropTypes.string.isRequired,
   historyGroup: PropTypes.object.isRequired,

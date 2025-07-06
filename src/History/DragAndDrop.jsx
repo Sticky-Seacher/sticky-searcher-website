@@ -1,33 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { useUserId } from "../context/userIdContext";
 import { updateGroupsAndHistoriesAfterDragAndDrop } from "../firebase/afterDragAndDrop";
-import { getHistoryGroups } from "../firebase/getHistoryGroups";
 import { addEmptyGroup } from "../firebase/group";
+import useHistoryGroups from "../hooks/useHistoryGroups";
 import AddGroupButton from "../shared/AddGroupButton";
 import KeywordGroup from "./KeywordGroup";
 
 export default function DragAndDrop() {
   const dragPosition = useRef();
-  const [historyGroups, setHistoryGroups] = useState([]);
+  const [, setHistoryGroups] = useState([]);
   const { userId } = useUserId();
 
-  useEffect(() => {
-    let ignore = false;
-
-    async function initHistoryGroups() {
-      const groups = await getHistoryGroups(userId);
-      setHistoryGroups(groups);
-    }
-
-    if (!ignore && userId !== "") {
-      initHistoryGroups();
-    }
-
-    return () => {
-      ignore = true;
-    };
-  }, [userId]);
+  const {
+    historyGroupsQuery: { data: historyGroups },
+  } = useHistoryGroups();
 
   const startDrag = (historyGroupIndex, history) => {
     dragPosition.current = {
@@ -74,7 +61,6 @@ export default function DragAndDrop() {
       {historyGroups.map((historyGroup, historyGroupIndex) => (
         <KeywordGroup
           key={historyGroup.id}
-          addedGroupName={historyGroups}
           setAddedGroupName={setHistoryGroups}
           setHistoryGroups={setHistoryGroups}
           groupName={historyGroup.name}

@@ -3,18 +3,22 @@ import { useEffect, useState } from "react";
 
 import { useUserId } from "../context/userIdContext";
 import { updateGroupName } from "../firebase/group";
+import useHistoryGroups from "../hooks/useHistoryGroups";
 
 export default function ChangeGroupName({
   initialGroupName,
-  addedGroupName,
   setAddedGroupName,
 }) {
   const [inputText, setInputText] = useState(initialGroupName);
   const [isChangeName, setIsChangeName] = useState(true);
   const [prevGroupName, setPrevGroupName] = useState("");
 
-  const defaultGroupName = addedGroupName[0].name;
-  const copiedPrevGroupName = [...addedGroupName];
+  const {
+    historyGroupsQuery: { data: historyGroups },
+  } = useHistoryGroups();
+
+  const defaultGroupName = historyGroups[0].name;
+  const copiedPrevGroupName = [...historyGroups];
   const findGroupIndex = copiedPrevGroupName.findIndex(
     (group) => group.name === prevGroupName
   );
@@ -82,6 +86,5 @@ export default function ChangeGroupName({
 
 ChangeGroupName.propTypes = {
   initialGroupName: PropTypes.string.isRequired,
-  addedGroupName: PropTypes.array.isRequired,
   setAddedGroupName: PropTypes.func.isRequired,
 };
