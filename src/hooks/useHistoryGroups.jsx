@@ -19,7 +19,7 @@ export default function useHistoryGroups() {
       const historyGroups = await getHistoryGroups(userId);
       return historyGroups;
     },
-    initialData: [],
+    placeholderData: [],
     staleTime: 1000 * 60,
     refetchOnWindowFocus: false,
   });
