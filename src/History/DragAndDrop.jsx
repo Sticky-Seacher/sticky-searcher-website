@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 import { useUserId } from "../context/userIdContext";
 import useGroups from "../hooks/useGroups";
@@ -8,7 +8,7 @@ import KeywordGroup from "./KeywordGroup";
 
 export default function DragAndDrop() {
   const dragPosition = useRef();
-  const [, setHistoryGroups] = useState([]);
+
   const { userId } = useUserId();
 
   const {
@@ -56,7 +56,6 @@ export default function DragAndDrop() {
       {historyGroups.map((historyGroup, historyGroupIndex) => (
         <KeywordGroup
           key={historyGroup.id}
-          setHistoryGroups={setHistoryGroups}
           groupName={historyGroup.name}
           historyGroup={historyGroup}
           onDragStart={(history) => startDrag(historyGroupIndex, history)}
