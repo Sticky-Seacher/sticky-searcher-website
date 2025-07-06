@@ -25,7 +25,7 @@ export default function useHistoryGroups() {
   });
 
   const updateHistoryGroupsAfterDragAndDropMutation = useMutation({
-    mutationFn: async ({ userId, newHistoryGroups }) => {
+    mutationFn: async ({ newHistoryGroups }) => {
       await updateGroupsAndHistoriesAfterDragAndDrop(userId, newHistoryGroups);
     },
     onSuccess: async () => {
@@ -34,7 +34,7 @@ export default function useHistoryGroups() {
   });
 
   const deleteHistoryGroupMutation = useMutation({
-    mutationFn: async ({ userId, targetGroupId }) => {
+    mutationFn: async ({ targetGroupId }) => {
       await deleteGroup(userId, targetGroupId);
     },
     onSuccess: async () => {

@@ -8,7 +8,7 @@ export default function useHistories() {
   const { userId } = useUserId();
 
   const deleteHistoryMutation = useMutation({
-    mutationFn: async ({ userId, groupId, targetHistoryId }) => {
+    mutationFn: async ({ groupId, targetHistoryId }) => {
       await deleteHistory(userId, groupId, targetHistoryId);
     },
     onSuccess: async () => {

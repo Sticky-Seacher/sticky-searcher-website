@@ -1,14 +1,11 @@
 import PropTypes from "prop-types";
 
-import { useUserId } from "../context/userIdContext";
 import useHistories from "../hooks/useHistories";
 import DeleteButton from "../shared/DeleteButton";
 import SearchUrl from "./SearchUrl";
 import { TotalKeywordButton } from "./TotalKeywordButton";
 
 export default function HistoryItem({ history, onDragStart, groupId }) {
-  const { userId } = useUserId();
-
   const { deleteHistoryMutation } = useHistories();
 
   return (
@@ -34,7 +31,7 @@ export default function HistoryItem({ history, onDragStart, groupId }) {
           onClick={() => {
             const targetHistoryId = history.id;
 
-            deleteHistoryMutation.mutate({ userId, groupId, targetHistoryId });
+            deleteHistoryMutation.mutate({ groupId, targetHistoryId });
           }}
         />
       </div>

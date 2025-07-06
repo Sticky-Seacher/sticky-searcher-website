@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 
-import { useUserId } from "../context/userIdContext";
 import useHistoryGroups from "../hooks/useHistoryGroups";
 import ChangeGroupName from "./ChangeGroupName";
 import HistoryItem from "./HistoryItem";
@@ -11,7 +10,6 @@ export default function KeywordGroup({
   onDragStart,
   onDrop,
 }) {
-  const { userId } = useUserId();
   const targetGroupId = historyGroup.id;
 
   const { deleteHistoryGroupMutation } = useHistoryGroups();
@@ -47,7 +45,7 @@ export default function KeywordGroup({
               if (targetGroupId === "default") {
                 return;
               }
-              deleteHistoryGroupMutation.mutate({ userId, targetGroupId });
+              deleteHistoryGroupMutation.mutate({ targetGroupId });
             }}
             className=" w-DelBtnW h-DelBtnH rounded-sm hover:bg-[#ddd] absolute right-[10px] top-[10px] text-subPrimary1"
           >

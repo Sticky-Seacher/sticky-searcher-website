@@ -1,6 +1,5 @@
 import { useRef } from "react";
 
-import { useUserId } from "../context/userIdContext";
 import useGroups from "../hooks/useGroups";
 import useHistoryGroups from "../hooks/useHistoryGroups";
 import AddGroupButton from "../shared/AddGroupButton";
@@ -8,8 +7,6 @@ import KeywordGroup from "./KeywordGroup";
 
 export default function DragAndDrop() {
   const dragPosition = useRef();
-
-  const { userId } = useUserId();
 
   const {
     historyGroupsQuery: { data: historyGroups },
@@ -41,13 +38,12 @@ export default function DragAndDrop() {
     dragPosition.current = null;
 
     updateHistoryGroupsAfterDragAndDropMutation.mutate({
-      userId,
       newHistoryGroups,
     });
   }
 
   async function createHistoryGroup(groupName) {
-    addGroupMutation.mutate({ userId, groupName });
+    addGroupMutation.mutate({ groupName });
   }
 
   return (

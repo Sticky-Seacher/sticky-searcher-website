@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 
-import { useUserId } from "../context/userIdContext";
 import useGroups from "../hooks/useGroups";
 import useHistoryGroups from "../hooks/useHistoryGroups";
 
@@ -21,8 +20,6 @@ export default function ChangeGroupName({ initialGroupName }) {
   const findGroupIndex = copiedPrevGroupName.findIndex(
     (group) => group.name === prevGroupName
   );
-
-  const { userId } = useUserId();
 
   useEffect(() => {
     if (inputText === defaultGroupName) {
@@ -45,7 +42,7 @@ export default function ChangeGroupName({ initialGroupName }) {
       const groupId = copiedPrevGroupName[findGroupIndex].id;
       const groupName = copiedPrevGroupName[findGroupIndex].name;
 
-      updateGroupNameMutation.mutate({ userId, groupId, groupName });
+      updateGroupNameMutation.mutate({ groupId, groupName });
 
       setIsChangeName(false);
     }

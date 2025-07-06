@@ -8,7 +8,7 @@ export default function useGroups() {
   const queryClient = useQueryClient();
 
   const addGroupMutation = useMutation({
-    mutationFn: async ({ userId, groupName }) => {
+    mutationFn: async ({ groupName }) => {
       addEmptyGroup(userId, groupName);
     },
     onSuccess: async () => {
@@ -17,7 +17,7 @@ export default function useGroups() {
   });
 
   const updateGroupNameMutation = useMutation({
-    mutationFn: async ({ userId, groupId, groupName }) => {
+    mutationFn: async ({ groupId, groupName }) => {
       await updateGroupName(userId, groupId, groupName);
     },
     onSuccess: async () => {
