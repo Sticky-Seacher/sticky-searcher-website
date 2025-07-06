@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useUserId } from "../context/userIdContext";
-import { addEmptyGroup } from "../firebase/group";
+import { addEmptyGroup, updateGroupName } from "../firebase/group";
 
 export default function useGroups() {
   const { userId } = useUserId();
@@ -16,7 +16,17 @@ export default function useGroups() {
     },
   });
 
+  const updateGroupNameMutation = useMutation({
+    mutationFn: async ({ userId, groupId, groupName }) => {
+      await updateGroupName(userId, groupId, groupName);
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["historyGroups", userId] });
+    },
+  });
+
   return {
     addGroupMutation,
+    updateGroupNameMutation,
   };
 }

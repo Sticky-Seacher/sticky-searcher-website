@@ -6,7 +6,6 @@ import ChangeGroupName from "./ChangeGroupName";
 import HistoryItem from "./HistoryItem";
 
 export default function KeywordGroup({
-  setAddedGroupName,
   groupName,
   historyGroup,
   onDragStart,
@@ -26,10 +25,7 @@ export default function KeywordGroup({
           onDrop={onDrop}
           onDragOver={(event) => event.preventDefault()}
         >
-          <ChangeGroupName
-            initialGroupName={groupName}
-            setAddedGroupName={setAddedGroupName}
-          />
+          <ChangeGroupName initialGroupName={groupName} />
           <div className="gap-[10px]">
             <ul className="pt-[30px]">
               {historyGroup.histories.map((history, historyIdex) => {
@@ -66,7 +62,6 @@ export default function KeywordGroup({
 }
 
 KeywordGroup.propTypes = {
-  setAddedGroupName: PropTypes.func.isRequired,
   groupName: PropTypes.string.isRequired,
   historyGroup: PropTypes.object.isRequired,
   onDragStart: PropTypes.func.isRequired,
