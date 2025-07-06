@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 import { useUserId } from "../context/userIdContext";
-import { deleteGroup } from "../firebase/group";
+import useHistoryGroups from "../hooks/useHistoryGroups";
 import ChangeGroupName from "./ChangeGroupName";
 import HistoryItem from "./HistoryItem";
 
@@ -15,6 +15,8 @@ export default function KeywordGroup({
 }) {
   const { userId } = useUserId();
   const targetGroupId = historyGroup.id;
+
+  const { deleteHistoryGroupMutation } = useHistoryGroups();
 
   return (
     <div className="newGroup h-full relative">
@@ -51,10 +53,7 @@ export default function KeywordGroup({
               if (targetGroupId === "default") {
                 return;
               }
-              deleteGroup(userId, targetGroupId);
-              setHistoryGroups((prevGroups) =>
-                prevGroups.filter((preGroup) => preGroup.id !== targetGroupId)
-              );
+              deleteHistoryGroupMutation.mutate({ userId, targetGroupId });
             }}
             className=" w-DelBtnW h-DelBtnH rounded-sm hover:bg-[#ddd] absolute right-[10px] top-[10px] text-subPrimary1"
           >

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUserId } from "../context/userIdContext";
 import { updateGroupsAndHistoriesAfterDragAndDrop } from "../firebase/afterDragAndDrop";
 import { getHistoryGroups } from "../firebase/getHistoryGroups";
+import { deleteGroup } from "../firebase/group";
 
 export default function useHistoryGroups() {
   const { userId } = useUserId();
@@ -32,8 +33,18 @@ export default function useHistoryGroups() {
     },
   });
 
+  const deleteHistoryGroupMutation = useMutation({
+    mutationFn: async ({ userId, targetGroupId }) => {
+      await deleteGroup(userId, targetGroupId);
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["historyGroups", userId] });
+    },
+  });
+
   return {
     historyGroupsQuery,
     updateHistoryGroupsAfterDragAndDropMutation,
+    deleteHistoryGroupMutation,
   };
 }
