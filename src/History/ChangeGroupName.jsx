@@ -1,25 +1,25 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 
-import { useUserId } from "../context/userIdContext";
-import { updateGroupName } from "../firebase/group";
+import useGroups from "../hooks/useGroups";
+import useHistoryGroups from "../hooks/useHistoryGroups";
 
-export default function ChangeGroupName({
-  initialGroupName,
-  addedGroupName,
-  setAddedGroupName,
-}) {
+export default function ChangeGroupName({ initialGroupName }) {
   const [inputText, setInputText] = useState(initialGroupName);
   const [isChangeName, setIsChangeName] = useState(true);
   const [prevGroupName, setPrevGroupName] = useState("");
 
-  const defaultGroupName = addedGroupName[0].name;
-  const copiedPrevGroupName = [...addedGroupName];
+  const { updateGroupNameMutation } = useGroups();
+
+  const {
+    historyGroupsQuery: { data: historyGroups },
+  } = useHistoryGroups();
+
+  const defaultGroupName = historyGroups[0].name;
+  const copiedPrevGroupName = [...historyGroups];
   const findGroupIndex = copiedPrevGroupName.findIndex(
     (group) => group.name === prevGroupName
   );
-
-  const { userId } = useUserId();
 
   useEffect(() => {
     if (inputText === defaultGroupName) {
@@ -42,9 +42,8 @@ export default function ChangeGroupName({
       const groupId = copiedPrevGroupName[findGroupIndex].id;
       const groupName = copiedPrevGroupName[findGroupIndex].name;
 
-      await updateGroupName(userId, groupId, groupName);
+      updateGroupNameMutation.mutate({ groupId, groupName });
 
-      setAddedGroupName(copiedPrevGroupName);
       setIsChangeName(false);
     }
   }
@@ -82,6 +81,4 @@ export default function ChangeGroupName({
 
 ChangeGroupName.propTypes = {
   initialGroupName: PropTypes.string.isRequired,
-  addedGroupName: PropTypes.array.isRequired,
-  setAddedGroupName: PropTypes.func.isRequired,
 };

@@ -1,33 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
-import { useUserId } from "../context/userIdContext";
-import { updateGroupsAndHistoriesAfterDragAndDrop } from "../firebase/afterDragAndDrop";
-import { getHistoryGroups } from "../firebase/getHistoryGroups";
-import { addEmptyGroup } from "../firebase/group";
+import useGroups from "../hooks/useGroups";
+import useHistoryGroups from "../hooks/useHistoryGroups";
 import AddGroupButton from "../shared/AddGroupButton";
 import KeywordGroup from "./KeywordGroup";
 
 export default function DragAndDrop() {
   const dragPosition = useRef();
-  const [historyGroups, setHistoryGroups] = useState([]);
-  const { userId } = useUserId();
 
-  useEffect(() => {
-    let ignore = false;
+  const {
+    historyGroupsQuery: { data: historyGroups },
+    updateHistoryGroupsAfterDragAndDropMutation,
+  } = useHistoryGroups();
 
-    async function initHistoryGroups() {
-      const groups = await getHistoryGroups(userId);
-      setHistoryGroups(groups);
-    }
-
-    if (!ignore && userId !== "") {
-      initHistoryGroups();
-    }
-
-    return () => {
-      ignore = true;
-    };
-  }, [userId]);
+  const { addGroupMutation } = useGroups();
 
   const startDrag = (historyGroupIndex, history) => {
     dragPosition.current = {
@@ -51,21 +37,13 @@ export default function DragAndDrop() {
 
     dragPosition.current = null;
 
-    await updateGroupsAndHistoriesAfterDragAndDrop(userId, newHistoryGroups);
-
-    setHistoryGroups(newHistoryGroups);
+    updateHistoryGroupsAfterDragAndDropMutation.mutate({
+      newHistoryGroups,
+    });
   }
 
   async function createHistoryGroup(groupName) {
-    const newGroupId = await addEmptyGroup(userId, groupName);
-
-    const newGroup = {
-      id: newGroupId,
-      name: groupName,
-      histories: [],
-    };
-
-    setHistoryGroups((prev) => [...prev, newGroup]);
+    addGroupMutation.mutate({ groupName });
   }
 
   return (
@@ -74,9 +52,6 @@ export default function DragAndDrop() {
       {historyGroups.map((historyGroup, historyGroupIndex) => (
         <KeywordGroup
           key={historyGroup.id}
-          addedGroupName={historyGroups}
-          setAddedGroupName={setHistoryGroups}
-          setHistoryGroups={setHistoryGroups}
           groupName={historyGroup.name}
           historyGroup={historyGroup}
           onDragStart={(history) => startDrag(historyGroupIndex, history)}
